@@ -1,0 +1,16 @@
+FROM continuumio/anaconda3
+EXPOSE 8000
+RUN apt-get update \
+    && apt-get install -y apache2 apache2-dev vim \
+    && apt-get clean \
+    && apt-get autoremove \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /var/www/python-ml-docker/
+COPY ./api_wsgi.wsgi /var/www/python-ml-docker/api_wsgi.wsgi
+COPY . /var/www/python-ml-docker/
+RUN pip install -r requirements-prod.txt
+RUN /opt/conda/bin/mod_wsgi-express install-module
+RUN mod_wsgi-express setup-server api_wsgi.wsgi --port=8000 \
+    --user www-data --group www-data \
+    --server-root=/etc/mod_wsgi-express-80
+CMD /etc/mod_wsgi-express-80/apachectl start -D FOREGROUND
