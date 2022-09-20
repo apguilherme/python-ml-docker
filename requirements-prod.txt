@@ -1,3 +1,4 @@
 flask
 flasgger
+stemming==1.0
 mod_wsgi
