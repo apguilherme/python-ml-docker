@@ -1,3 +1,12 @@
+#API for Machine Learning
+
+### swagger docs
+`http://127.0.0.1:5050/apidocs/`
+
+`http://127.0.0.1:8000/apidocs/`
+
+![Screenshot](preview.png)
+
 ### create image
 `docker build -t python-ml-docker . -f Dockerfile`
 
@@ -18,11 +27,6 @@
 
 `docker build -t python-ml-docker-prod . -f Dockerfile.prod && docker run -p 8000:8000 python-ml-docker-prod`
 
-### swagger docs
-`http://127.0.0.1:5050/apidocs/`
-
-`http://127.0.0.1:8000/apidocs/`
-
 ### debug
 `docker ps`
 
@@ -35,5 +39,5 @@
 `vim error_log`
 
 ---
-Based on Udemy Course: 
+Credits - developed based on Udemy Course: 
 > Deploying AI & Machine Learning Models for Business | Python: Learn to build Machine Learning, Deep Learning & NLP Models & Deploy them with Docker Containers (DevOps) (in Python)
