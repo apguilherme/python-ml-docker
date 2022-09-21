@@ -6,6 +6,10 @@ from flasgger import Swagger
 from stemming.porter2 import stem
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.cluster import KMeans
+from keras.datasets import mnist
+from keras.models import load_model
+from PIL import Image
+import matplotlib.pyplot as plt
 from io import BytesIO
 import time
 import zipfile
@@ -14,7 +18,9 @@ import pandas as pd
 import numpy as np
 
 with open("./pickles/forest.pkl", "rb") as model_file: # model to predict from
-    model = pickle.load(model_file)
+    model_forest = pickle.load(model_file)
+
+model_img = load_model('./model_img.h5')
 
 app = Flask(__name__)
 swagger = Swagger(app) # http://127.0.0.1:5050/apidocs/
@@ -51,7 +57,7 @@ def iris():
     s_width = request.args.get("s_width")
     p_length = request.args.get("p_length")
     p_width = request.args.get("p_width")
-    prediction = model.predict(np.array([[s_length, s_width, p_length, p_width]]))
+    prediction = model_forest.predict(np.array([[s_length, s_width, p_length, p_width]]))
     return str(prediction)
 
 @app.route("/iris_file", methods=["POST"]) # http://127.0.0.1:5050/iris_file
@@ -69,7 +75,7 @@ def iris_input():
             description: OK
     """
     input_file = pd.read_csv(request.files.get("input_file"), header=None) # form-data
-    prediction = model.predict(input_file)
+    prediction = model_forest.predict(input_file)
     return str(prediction)
 
 # TEXT API
@@ -153,6 +159,24 @@ def cluster():
   response.headers["Access-Control-Allow-Origin"] = "*"
   return response
 
+# IMAGE API
+
+@app.route('/digit', methods=['POST'])
+def predict_digit():
+    """Returns a prediction of mnist digit
+    ---
+    parameters:
+        - name: image
+          in: formData
+          type: file
+          required: true
+    responses:
+        200:
+            description: OK
+    """
+    img = Image.open(request.files['image'])
+    img2arr = np.array(img).reshape((1, 1, 28, 28))
+    return str(np.argmax(model_img.predict(img2arr)))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050)
