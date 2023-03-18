@@ -41,3 +41,6 @@
 ---
 Credits - developed based on Udemy Course: 
 > Deploying AI & Machine Learning Models for Business | Python: Learn to build Machine Learning, Deep Learning & NLP Models & Deploy them with Docker Containers (DevOps) (in Python)
+> Authors: UNP United Network of Professionals
+> Link: https://www.udemy.com/course/deploy-data-science-nlp-models-with-docker-containers/
+
